@@ -8,7 +8,7 @@ const datastore = new Datastore({
     projectId: "climate-monitoring",
 });
 
-router.post('/store', async function(req, res, next) {
+router.post('/store', async function(req, res) {
     const body = req.body;
     let hash = crypto.createHash('sha256').update(body.key).digest('hex');
     if (hash !== "79a82b2818d6488e881cd5df4d58da530caff1ea9dbc2d19307846fed4cf29a4") {
@@ -39,11 +39,17 @@ router.post('/store', async function(req, res, next) {
     }
 });
 
-router.get('/get/:id', async function(req, res, next) {
+router.get('/get/:id', async function(req, res) {
     const id = req.params.id;
     const taskKey = datastore.key(["Record", parseInt(id)]);
     const [task] = await datastore.get(taskKey);
     res.send(task);
+});
+
+router.get('/recent', async function(req, res) {
+    const query = datastore.createQuery("Record").order("created", {descending: true}).limit(30);
+    const result = await datastore.runQuery(query);
+    res.send(result);
 });
 
 module.exports = router;
