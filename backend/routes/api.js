@@ -30,7 +30,7 @@ router.post('/store', async function(req, res) {
                 humidityOutside: parts[1],
                 temperatureInside: parts[2],
                 humidityInside: parts[3],
-                created: new Date()
+                created: new Date().getTime()
             }
         };
         const task = await datastore.save(record);
@@ -49,7 +49,7 @@ router.get('/get/:id', async function(req, res) {
 router.get('/recent', async function(req, res) {
     const query = datastore.createQuery("Record").order("created", {descending: true}).limit(30);
     const result = await datastore.runQuery(query);
-    res.send(result);
+    res.send(result[0]);
 });
 
 module.exports = router;
