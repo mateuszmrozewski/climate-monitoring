@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "DATASTORE_EMULATOR_HOST=localhost:8081 node ./bin/www"
+    "start-dev": "DATASTORE_EMULATOR_HOST=localhost:8081 node ./bin/www",
+    "build": "cd ../ui && npm run build && cp -r -v build/* ../backend/public"
   },
   "dependencies": {
     "@google-cloud/datastore": "^4.0.0",

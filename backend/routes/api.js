@@ -16,12 +16,13 @@ router.post('/store', async function(req, res) {
         res.send('NOT OK');
     } else {
         const raw = body.data;
-        if (raw.endsWith(":0:0")) {
-            res.send("Incomplete data");
+        const parts = body.data.split(":");
+        if (parts[2] === '0' || parts[3] === '0') {
+            res.send("Incomplete data reading from sensor");
             return;
         }
         const taskKey = datastore.key(["Record"]);
-        const parts = body.data.split(":");
+
         const record = {
             key: taskKey,
             data: {
@@ -47,7 +48,7 @@ router.get('/get/:id', async function(req, res) {
 });
 
 router.get('/recent', async function(req, res) {
-    const query = datastore.createQuery("Record").order("created", {descending: true}).limit(30);
+    const query = datastore.createQuery("Record").order("created", {descending: true}).limit(150);
     const result = await datastore.runQuery(query);
     res.send(result[0]);
 });
